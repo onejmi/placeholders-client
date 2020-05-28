@@ -34,8 +34,16 @@ export default defineComponent({
   components: {},
   setup (props, context) {
     async function signIn (): Promise<void> {
-      const googleUser = await (context.root as any).$gAuth.signIn()
-      console.log(googleUser.getId())
+      const authCode: string = await (context.root as any).$gAuth.getAuthCode()
+      const res = await fetch(
+        'http://localhost:4567/authenticate',
+        {
+          method: 'POST',
+          // eslint-disable-next-line @typescript-eslint/camelcase
+          body: JSON.stringify({ auth_code: authCode })
+        }
+      )
+      console.log(await res.text())
     }
 
     return { signIn }
