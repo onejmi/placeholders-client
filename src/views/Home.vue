@@ -32,18 +32,30 @@ import { defineComponent } from '@vue/composition-api'
 export default defineComponent({
   name: 'Home',
   components: {},
-  setup (props, context) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  setup (props, context: any) {
     async function signIn (): Promise<void> {
-      const authCode: string = await (context.root as any).$gAuth.getAuthCode()
-      const res = await fetch(
-        'http://localhost:4567/authenticate',
-        {
-          method: 'POST',
-          // eslint-disable-next-line @typescript-eslint/camelcase
-          body: JSON.stringify({ auth_code: authCode })
-        }
-      )
-      console.log(await res.text())
+      let sub = ''
+      if (context.root.$cookies.isKey('sub')) {
+        sub = context.root.$cookies.get('sub')
+      }
+      const loggedInRes = await (
+        await fetch(`http://localhost:4567/auth/status?sub=${sub}`)
+      ).json()
+      if (loggedInRes.logged_in) {
+        console.log(`Logged in! ${sub}`)
+      } else {
+        const authCode: string = await context.root.$gAuth.getAuthCode()
+        const res = await fetch(
+          'http://localhost:4567/authenticate',
+          {
+            method: 'POST',
+            // eslint-disable-next-line @typescript-eslint/camelcase
+            body: JSON.stringify({ auth_code: authCode })
+          }
+        )
+        context.root.$cookies.set('sub', (await res.json()).subject)
+      }
     }
 
     return { signIn }

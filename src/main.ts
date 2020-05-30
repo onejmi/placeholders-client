@@ -4,6 +4,7 @@ import VueCompositionApi from '@vue/composition-api'
 import router from './router'
 import vuetify from './plugins/vuetify'
 import GAuth from 'vue-google-oauth2'
+import VueCookies from 'vue-cookies'
 
 Vue.config.productionTip = false
 
@@ -16,6 +17,11 @@ const GAuthOptions = {
 }
 
 Vue.use(GAuth, GAuthOptions)
+Vue.use(VueCookies)
+
+// eslint-disable-next-line
+// @ts-ignore
+Vue.$cookies.config('14d')
 
 new Vue({
   router,
