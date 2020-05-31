@@ -34,27 +34,41 @@ export default defineComponent({
   components: {},
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setup (props, context: any) {
+    function displayLoginFail () {
+      console.log('authentication failed! :o')
+    }
+    function connect () {
+      console.log('you\'re connected!')
+    }
     async function signIn (): Promise<void> {
-      let sub = ''
-      if (context.root.$cookies.isKey('sub')) {
-        sub = context.root.$cookies.get('sub')
-      }
-      const loggedInRes = await (
-        await fetch(`http://localhost:4567/auth/status?sub=${sub}`)
-      ).json()
-      if (loggedInRes.logged_in) {
-        console.log(`Logged in! ${sub}`)
-      } else {
-        const authCode: string = await context.root.$gAuth.getAuthCode()
-        const res = await fetch(
-          'http://localhost:4567/authenticate',
-          {
-            method: 'POST',
-            // eslint-disable-next-line @typescript-eslint/camelcase
-            body: JSON.stringify({ auth_code: authCode })
+      try {
+        let sessionId = ''
+        if (context.root.$cookies.isKey('ph_sid')) {
+          sessionId = context.root.$cookies.get('ph_sid')
+        }
+        const loggedInRes = await (
+          await fetch(`http://localhost:4567/auth/status?session_id=${sessionId}`)
+        ).json()
+        if (!loggedInRes.logged_in) {
+          const authCode: string = await context.root.$gAuth.getAuthCode()
+          const res = await fetch(
+            'http://localhost:4567/authenticate',
+            {
+              method: 'POST',
+              // eslint-disable-next-line @typescript-eslint/camelcase
+              body: JSON.stringify({ auth_code: authCode })
+            }
+          )
+          const parsedRes = await res.json()
+          if (!parsedRes.session_id) {
+            displayLoginFail()
+            return
           }
-        )
-        context.root.$cookies.set('sub', (await res.json()).subject)
+          context.root.$cookies.set('ph_sid', parsedRes.session_id)
+        }
+        connect()
+      } catch (e) {
+        displayLoginFail()
       }
     }
 
