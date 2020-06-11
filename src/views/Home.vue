@@ -5,13 +5,7 @@
         <v-spacer></v-spacer>
         <v-col md="col-4">
           <v-card class="ma-4 pa-4">
-            <v-img class="mx-auto my-4" src="../assets/logo.png" width="128" height="128">
-              <template v-slot:placeholder>
-                <v-row class="fill-height align-center justify-center">
-                  <v-progress-circular indeterminate color="primary"></v-progress-circular>
-                </v-row>
-              </template>
-            </v-img>
+            <pre-image image-file="logo.png" width="128" height="128"/>
             <v-card-actions class="justify-center">
               <v-btn v-if="!processing" @click="signIn">
                 Connect
@@ -26,7 +20,7 @@
     </v-container>
     <v-snackbar
     v-model="failed"
-    timeout=3000
+    :timeout=3000
     >
       <span>Authentication Failed <span style="font-size: 20px">😕</span></span>
       <v-btn
@@ -42,10 +36,13 @@
 
 <script lang="ts">
 import { defineComponent, ref } from '@vue/composition-api'
+import PreImage from '@/components/PreImage.vue'
 
 export default defineComponent({
   name: 'Home',
-  components: {},
+  components: {
+    PreImage
+  },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setup (props, context: any) {
     const failed = ref(false)
@@ -56,17 +53,13 @@ export default defineComponent({
     }
     function connect () {
       failed.value = false
-      console.log('you\'re connected!')
+      context.root.$router.push({ path: '/dashboard' })
     }
     async function signIn (): Promise<void> {
       processing.value = true
       try {
-        let sessionId = ''
-        if (context.root.$cookies.isKey('ph_sid')) {
-          sessionId = context.root.$cookies.get('ph_sid')
-        }
         const loggedInRes = await (
-          await fetch(`http://localhost:4567/auth/status?session_id=${sessionId}`)
+          await fetch('http://localhost:4567/auth/status', { credentials: 'include' })
         ).json()
         if (!loggedInRes.logged_in) {
           const authCode: string = await context.root.$gAuth.getAuthCode()
@@ -74,6 +67,7 @@ export default defineComponent({
             'http://localhost:4567/authenticate',
             {
               method: 'POST',
+              credentials: 'include',
               // eslint-disable-next-line @typescript-eslint/camelcase
               body: JSON.stringify({ auth_code: authCode })
             }

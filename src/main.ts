@@ -12,7 +12,7 @@ Vue.use(VueCompositionApi)
 
 const GAuthOptions = {
   clientId: '130579102697-jga0139h5eqkscf6fptn2jppercepm73.apps.googleusercontent.com',
-  scope: 'email profile openid',
+  scope: 'email profile openid https://www.googleapis.com/auth/youtube',
   prompt: 'consent'
 }
 
