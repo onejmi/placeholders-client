@@ -3,3 +3,8 @@ export interface Profile {
   image_url: string;
   subscriber_count: number;
 }
+
+export interface Video {
+  title: string
+  thumbnail_url: string
+}

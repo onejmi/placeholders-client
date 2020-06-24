@@ -98,6 +98,7 @@ export default defineComponent({
       // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
       // @ts-ignore
       if (context.root.$router.currentRoute.path.startsWith('/dashboard')) { show.value = true }
+      window.scrollTo(0, 0)
     }
 
     eventBus.$on('profile-load',
