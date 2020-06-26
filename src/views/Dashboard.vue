@@ -43,6 +43,7 @@
               >
                 <v-hover v-slot:default="{ hover }">
                   <v-card
+                    @click.stop="openVideoDialogue(video)"
                     class="justify-center pb-2 pl-4 pr-4"
                     :elevation="hover ? 12 : 4"
                     outlined
@@ -65,6 +66,12 @@
         </v-col>
         <v-spacer></v-spacer>
       </v-row>
+      <v-dialog
+        v-model="showDialogue"
+        max-width="360"
+      >
+        <TitleEditor v-on:submit="closeDialogue" :video="currentVideo" :key="showDialogue"/>
+      </v-dialog>
     </v-container>
     <v-container v-else fill-height fluid style="height: 500px">
       <v-progress-circular indeterminate class="ma-auto" size=64 width=6 color="blue"></v-progress-circular>
@@ -73,30 +80,43 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref, watchEffect } from '@vue/composition-api'
-import { Profile, Video } from '@/api/model/user'
+import { defineComponent, Ref, ref, watchEffect, watch } from '@vue/composition-api'
+import {Profile, Video, VideoUpdate} from '@/api/model/user'
 import PreImage from '@/components/PreImage.vue'
 import { eventBus } from '@/event'
+import TitleEditor from "@/components/TitleEditor.vue";
 
 export default defineComponent({
   name: 'Dashboard',
   components: {
+    TitleEditor,
     PreImage
   },
   setup () {
     const profile: Ref<Profile | null> = ref(null)
-    const tempImage = 'https://pbs.twimg.com/profile_images/917061563428851712/4EMjXZol_400x400.jpg'
-    fetch('http://localhost:4567/api/v1/profile/', { credentials: 'include' })
+    fetch('http://localhost:4567/api/v1/profile', { credentials: 'include' })
       .then(async (res) => { profile.value = await res.json() })
 
     const videos: Ref<Video[] | null> = ref(null)
     fetch('http://localhost:4567/api/v1/profile/uploads', { credentials: 'include' })
       .then(async (res) => { videos.value = await res.json() })
 
+    const currentVideo: Ref<Video | null> = ref(null)
+    const showDialogue = ref(false)
+
+    function openVideoDialogue(video: Video) {
+      currentVideo.value = video
+      showDialogue.value = true
+    }
+
+    function closeDialogue() {
+      showDialogue.value = false
+    }
+
     watchEffect(() => {
       eventBus.$emit('profile-load', profile.value?.image_url)
     })
-    return { profile, videos, tempImage }
+    return { profile, videos, currentVideo, showDialogue, openVideoDialogue, closeDialogue }
   }
 })
 </script>

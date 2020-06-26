@@ -87,6 +87,7 @@ export default defineComponent({
     const picture = ref(require('./assets/logo.png'))
     const routes = [
       { name: 'Home', icon: 'mdi-view-dashboard', path: '/dashboard' },
+      { name: 'Placeholders', icon: 'mdi-brush', path: '/placeholders'},
       { name: 'Settings', icon: 'mdi-cog', path: '/settings' }
     ]
 
