@@ -46,7 +46,7 @@
           if(form.value.validate()) {
             loading.value = true
             const res = await fetch('http://localhost:4567/api/v1/profile/uploads/update/title', {
-              method: 'POST',
+              method: 'PATCH',
               credentials: 'include',
               body: JSON.stringify({ video_id: video.id, new_title: videoTitle.value })
             })
