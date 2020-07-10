@@ -14,6 +14,11 @@ const routes: Array<RouteConfig> = [
     path: '/dashboard',
     name: 'Dashboard',
     component: () => import(/* webpackChunkName: "dashboard" */ '../views/Dashboard.vue')
+  },
+  {
+    path: '/dashboard/placeholders',
+    name: 'Placeholders',
+    component: () => import(/* webpackChunkName: "placeholders" */ '../views/Placeholders.vue')
   }
 ]
 

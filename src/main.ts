@@ -5,10 +5,12 @@ import router from './router'
 import vuetify from './plugins/vuetify'
 import GAuth from 'vue-google-oauth2'
 import VueCookies from 'vue-cookies'
+import VueClipboard from 'vue-clipboard2'
 
 Vue.config.productionTip = false
 
 Vue.use(VueCompositionApi)
+Vue.use(VueClipboard)
 
 const GAuthOptions = {
   clientId: '130579102697-jga0139h5eqkscf6fptn2jppercepm73.apps.googleusercontent.com',

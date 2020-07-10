@@ -14,7 +14,7 @@
         target="_blank"
         text
       >
-        <span class="mr-2">Latest Release</span>
+        <span class="mr-2">Discord Server</span>
         <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
     </v-app-bar>
@@ -56,6 +56,7 @@
           <v-list-item
             v-for="route in routes"
             :key="route.name"
+            @click="$root.$router.push(route.path)"
           >
             <v-list-item-icon>
               <v-icon>{{ route.icon }}</v-icon>
@@ -87,8 +88,8 @@ export default defineComponent({
     const picture = ref(require('./assets/logo.png'))
     const routes = [
       { name: 'Home', icon: 'mdi-view-dashboard', path: '/dashboard' },
-      { name: 'Placeholders', icon: 'mdi-brush', path: '/placeholders'},
-      { name: 'Settings', icon: 'mdi-cog', path: '/settings' }
+      { name: 'Placeholders', icon: 'mdi-brush', path: '/dashboard/placeholders'},
+      { name: 'Settings', icon: 'mdi-cog', path: '/dashboard/settings' }
     ]
 
     watch(group, (_, __) => {
