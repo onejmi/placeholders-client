@@ -4,14 +4,14 @@
       <v-list-item-content>
         <v-list-item-title class="headline mb-1">{{ name }}</v-list-item-title>
         <v-list-item-subtitle>
-          Usage: <div class="code-block" style="color: whitesmoke">{{ formattedPlaceholder }}</div>
+          Usage: <div class="code-block" style="color: whitesmoke">{{ "{" + placeholder + "}" }}</div>
           <v-tooltip top>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 icon
                 v-bind="attrs"
                 v-on="on"
-                v-clipboard:copy="formattedPlaceholder"
+                v-clipboard="() => `{${placeholder}}`"
               >
                 <v-icon>mdi-content-copy</v-icon>
               </v-btn>
@@ -54,7 +54,6 @@
         setup(props) {
           const enabled = ref(false);
           const changingState = ref(false);
-          const formattedPlaceholder = ref(`{${props.placeholder}}`)
 
           watch(enabled, async () => {
             changingState.value = true;
@@ -65,7 +64,7 @@
             }
             changingState.value = false;
           })
-          return { enabled, changingState, formattedPlaceholder }
+          return { enabled, changingState }
         }
     })
 </script>
