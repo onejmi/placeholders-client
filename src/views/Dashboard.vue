@@ -29,12 +29,12 @@
               <v-progress-circular indeterminate color="blue"></v-progress-circular>
             </v-row>
           </v-card>
-          <v-card v-else-if="videos.length > 0" elevation="4">
+          <v-card v-else-if="videos.length > 0" elevation="4" min-height="350">
             <v-card-title class="justify-center">Your Videos</v-card-title>
             <v-slide-group
               center-active
               show-arrows
-              class="pa-4"
+              class="pa-4 pb-8"
             >
               <v-slide-item
                 v-for="video in videos"
@@ -44,14 +44,14 @@
                 <v-hover v-slot:default="{ hover }">
                   <v-card
                     @click.stop="openVideoDialogue(video)"
-                    class="justify-center pb-2 pl-4 pr-4"
+                    class="mx-auto my-12 text-center"
                     :elevation="hover ? 12 : 4"
-                    outlined
-                    width="192"
+                    width="256"
+                    height="300"
                     v-ripple="{ center: true }"
                   >
-                    <v-card-title>{{ video.title.length > 11 ? video.title.substr(0,11) + '...' : video.title }}</v-card-title>
-                    <pre-image :online=true :image-file="video.thumbnail_url" width="160" height="112"></pre-image>
+                    <pre-image img-class="mx-auto my-0" :online=true :image-file="video.thumbnail_url"></pre-image>
+                    <v-card-title>{{ video.title.length > 15 ? video.title.substr(0,15) + '...' : video.title }}</v-card-title>
                   </v-card>
                 </v-hover>
               </v-slide-item>

@@ -1,7 +1,7 @@
 <template>
   <v-form ref="form">
     <v-card>
-      <v-card-title>Video Title Editor!</v-card-title>
+      <v-card-title>Video Title Editor</v-card-title>
       <v-card-text>
         <v-text-field
           v-model="videoTitle"
