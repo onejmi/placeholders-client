@@ -2,22 +2,22 @@
   <v-container>
     <h1 class="text-center">Toggle Placeholders 🔌</h1>
     <v-row class="ma-4">
-      <v-col cols="4">
+      <v-col class="col-md-4 col-sm-6">
         <PlaceholderCard name="Role" placeholder="role" :description="description" :icon-url="link"/>
       </v-col>
-      <v-col cols="4">
+      <v-col class="col-md-4 col-sm-6">
         <PlaceholderCard name="Random" placeholder="random" :description="longDescription" :icon-url="link"/>
       </v-col>
-      <v-col cols="4">
+      <v-col class="col-md-4 col-sm-6">
         <PlaceholderCard name="Views" placeholder="views" :description="description" :icon-url="link"/>
       </v-col>
-      <v-col cols="4">
+      <v-col class="col-md-4 col-sm-6">
         <PlaceholderCard name="Views" placeholder="views" :description="longDescription" :icon-url="link"/>
       </v-col>
-      <v-col cols="4">
+      <v-col class="col-md-4 col-sm-6">
         <PlaceholderCard name="Views" placeholder="views" :description="description" :icon-url="link"/>
       </v-col>
-      <v-col cols="4">
+      <v-col class="col-md-4 col-sm-6">
         <PlaceholderCard name="Views" placeholder="views" :description="description" :icon-url="link"/>
       </v-col>
     </v-row>

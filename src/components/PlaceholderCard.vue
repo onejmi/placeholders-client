@@ -1,5 +1,5 @@
 <template>
-  <v-card shaped class="pa-3">
+  <v-card shaped class="pa-3" height="350">
     <v-list-item>
       <v-list-item-content>
         <v-list-item-title class="headline mb-1">{{ name }}</v-list-item-title>
@@ -23,10 +23,13 @@
       <v-list-item-avatar
         size="80"
       >
-        <pre-image :image-file="iconUrl" width="80" height="80" online="true"></pre-image>
+        <pre-image :image-file="iconUrl" width="80" height="80" online=true></pre-image>
       </v-list-item-avatar>
     </v-list-item>
-    <v-card-text>{{ description }}</v-card-text>
+    <v-card-text class="ph-desc">
+      {{ description.length > 140 ? description.substr(0, 140) + '...' : description }}
+    </v-card-text>
+    <v-divider></v-divider>
     <v-card-actions>
       <v-progress-circular indeterminate v-if="changingState"/>
       <v-card-text class="font-weight-medium enabled" v-else-if="enabled">Enabled</v-card-text>
@@ -82,5 +85,8 @@
     border-color: black;
     background-color: dimgrey;
     padding: 5px;
+  }
+  .ph-desc {
+    height: 150px;
   }
 </style>
