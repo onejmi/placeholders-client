@@ -2,33 +2,28 @@
   <v-container>
     <h1 class="text-center">Toggle Placeholders 🔌</h1>
     <v-row class="ma-4">
-      <v-col class="col-md-4 col-sm-6">
-        <PlaceholderCard name="Role" placeholder="role" :description="description" :icon-url="link"/>
-      </v-col>
-      <v-col class="col-md-4 col-sm-6">
-        <PlaceholderCard name="Random" placeholder="random" :description="longDescription" :icon-url="link"/>
-      </v-col>
-      <v-col class="col-md-4 col-sm-6">
-        <PlaceholderCard name="Views" placeholder="views" :description="description" :icon-url="link"/>
-      </v-col>
-      <v-col class="col-md-4 col-sm-6">
-        <PlaceholderCard name="Views" placeholder="views" :description="longDescription" :icon-url="link"/>
-      </v-col>
-      <v-col class="col-md-4 col-sm-6">
-        <PlaceholderCard name="Views" placeholder="views" :description="description" :icon-url="link"/>
-      </v-col>
-      <v-col class="col-md-4 col-sm-6">
-        <PlaceholderCard name="Views" placeholder="views" :description="description" :icon-url="link"/>
+      <v-col
+        v-for="placeholder in placeholders"
+        :key="placeholder.placeholder"
+        class="col-md-4 col-sm-6">
+        <PlaceholderCard
+          :name="placeholder.name"
+          :placeholder="placeholder.placeholder"
+          :description="placeholder.description"
+          :icon-url="placeholder.image_url"
+          :enabled="placeholder.enabled"
+        />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
-<script type="ts">
+<script lang="ts">
     //todo game plan -> users should have X placeholder name added or removed to their list
     //then scanner will check for all placeholders that they have
-    import { defineComponent } from "@vue/composition-api";
+    import {defineComponent, onMounted, Ref, ref} from "@vue/composition-api";
     import PlaceholderCard from "@/components/PlaceholderCard.vue";
+    import { Placeholder } from "@/api/model/placeholder";
 
     export default defineComponent({
         name: "Placeholders",
@@ -36,13 +31,20 @@
           PlaceholderCard
         },
         setup() {
-          const link = 'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?ixlib=rb-1.2.1&w=1000&q=80'
-          const description = 'This is just a random default description'
-          const longDescription = 'This is a very long description. The point of this is to see how far this will go. Kinda crazy right.' +
-            'Anyways, pretty beserk how u have to do this kindof hard work just to get something to fit on a screen' +
-            'Welp. It is what it is.'
-
-          return { link, description, longDescription }
+          const placeholders : Ref<Placeholder[]> = ref([])
+          onMounted(async () => {
+            const res = await fetch('http://localhost:4567/api/v1/placeholders', { credentials: 'include' })
+            const global : Placeholder[] = await res.json()
+            const currPlaceholders : string[] | null =
+              await (await fetch('http://localhost:4567/api/v1/profile/placeholders', { credentials: 'include'})).json()
+            if(currPlaceholders != null) {
+              global.forEach(entry => {
+                entry.enabled = currPlaceholders.includes(entry.placeholder);
+                placeholders.value.push(entry)
+              })
+            }
+          })
+          return { placeholders }
         }
     })
 </script>

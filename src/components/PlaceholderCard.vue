@@ -23,7 +23,7 @@
       <v-list-item-avatar
         size="80"
       >
-        <pre-image :image-file="iconUrl" width="80" height="80" online=true></pre-image>
+        <pre-image :image-file="iconUrl" width="80" height="80" :online=true></pre-image>
       </v-list-item-avatar>
     </v-list-item>
     <v-card-text class="ph-desc">
@@ -31,15 +31,15 @@
     </v-card-text>
     <v-divider></v-divider>
     <v-card-actions>
-      <v-progress-circular indeterminate v-if="changingState"/>
-      <v-card-text class="font-weight-medium enabled" v-else-if="enabled">Enabled</v-card-text>
+      <v-card-text class="font-weight-medium enabled" v-if="enabled">Enabled</v-card-text>
       <v-card-text class="font-weight-medium disabled" v-else>Disabled</v-card-text>
-      <v-switch v-model="enabled"/>
+      <v-spacer></v-spacer>
+      <v-switch v-model="enabled" @change="update(enabled)"/>
     </v-card-actions>
   </v-card>
 </template>
 
-<script type="ts">
+<script lang="ts">
   import {defineComponent, ref, watch} from "@vue/composition-api";
   import PreImage from "@/components/PreImage.vue";
 
@@ -53,21 +53,20 @@
           description: String,
           placeholder: String,
           iconUrl: String,
+          enabled: Boolean
         },
         setup(props) {
-          const enabled = ref(false);
-          const changingState = ref(false);
+          const enabled = ref(props.enabled);
 
-          watch(enabled, async () => {
-            changingState.value = true;
-            if(enabled.value) {
-              // send request to enable
-            } else {
-              // send request to disable
-            }
-            changingState.value = false;
-          })
-          return { enabled, changingState }
+          const update = function(enabled: boolean) {
+            fetch('http://localhost:4567/api/v1/profile/placeholders', {
+              method: 'PATCH',
+              credentials: 'include',
+              body: JSON.stringify({ placeholder_name: props.placeholder, enabled: enabled })
+            })
+          }
+
+          return { enabled, update }
         }
     })
 </script>
